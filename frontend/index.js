@@ -23,21 +23,25 @@ const page = (body) => `
 `
 
 app.get("/", async (req, res) => {
-  let response
-  try {
-    // The FRONTEND server calls the BACKEND server (service-to-service call)
-    response = await fetch(`${backendUrl}/api/messages`)
-  } catch (err) {
-    console.error(`Could not reach the backend at ${backendUrl}:`, err.message)
-    return res.status(502).send(page(`
-      <h1>😢 The frontend is up, but the backend is not responding</h1>
-      <p>I tried to call <code>${backendUrl}/api/messages</code> and failed.</p>
-      <p>Error: <code>${escape(err.message)}</code></p>
-      <p>Check: is the backend running? Is <code>BACKEND_URL</code> correct?</p>
-    `))
-  }
+    let response
+    let statsResponse // <-- Adiciona esta linha aqui
+    try {
+        // The FRONTEND server calls the BACKEND server (service-to-service call)
+        response = await fetch(`${backendUrl}/api/messages`)
+        statsResponse = await fetch(`${backendUrl}/api/stats`) // <-- Move a linha para aqui
+    } catch (err) {
+        console.error(`Could not reach the backend at ${backendUrl}:`, err.message)
+        return res.status(502).send(page(`
+            <h1>🥵 The frontend is up, but the backend is not responding</h1>
+            <p>I tried to call <code>${backendUrl}/api/messages</code> and failed.</p>
+            <p>Error: <code>${escape(err.message)}</code></p>
+            <p>Check: is the backend running? Is <code>BACKEND_URL</code> correct?</p>
+        `))
+    }
 
-  const data = await response.json()
+    const data = await response.json()
+    const statsData = await statsResponse.json() // <-- Coloca esta linha aqui
+
 
   if (!response.ok) {
     // The backend answered, but it was the DATABASE that failed
@@ -56,6 +60,7 @@ app.get("/", async (req, res) => {
 
   res.send(page(`
     <h1>🖥️ Three-Stackerino Message Board</h1>
+    <h3>Total messages: <strong>${statsData.total_messages}</strong></h3>
     <p>Frontend ✅ → Backend ✅ → Database ✅</p>
     <form method="POST" action="/messages" style="background: #eef; padding: 16px; border-radius: 8px;">
       <input name="author" placeholder="Your name" maxlength="50" required>

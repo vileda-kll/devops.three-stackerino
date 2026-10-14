@@ -1,0 +1,8 @@
+ id |      author      |                                       text                                        |         created_at         
+----+------------------+-----------------------------------------------------------------------------------+----------------------------
+  1 | Teacher          | Welcome to Three-Stackerino! 🎉                                                   | 2026-10-14 11:04:29.55375
+  2 | ManuelCruzvileda | Sucesso! O frontend e o backend estão a comunicar perfeitamente com o PostgreSQL. | 2026-10-14 11:22:20.603681
+  3 | ManuelCruzvileda | segunda mensagem de teste                                                         | 2026-10-14 11:23:54.054857
+  4 | ManuelCruzvileda | terceira mensagem de teste                                                        | 2026-10-14 11:24:07.938833
+(4 rows)
+

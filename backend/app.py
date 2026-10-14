@@ -81,6 +81,16 @@ def healthcheck():
         return jsonify({"backend": "ok", "database": "error", "detail": str(err).strip()}), 503
 
 
+@app.route('/api/stats', methods=['GET'])
+def get_stats():
+    try:
+        with connect_db() as conn:
+            (count,) = conn.execute('SELECT COUNT(*) FROM messages;').fetchone()
+        return jsonify({"total_messages": count})
+    except psycopg.Error as err:
+        return db_error(err)
+
+
 if __name__ == "__main__":
     # 0.0.0.0 = listen on ALL network interfaces (needed for other machines to reach us)
     print(f"Backend {NUMBER} listening on http://0.0.0.0:{PORT}/api/messages")
